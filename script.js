@@ -1,6 +1,7 @@
 const d = document;
 const $main = d.querySelector("main");
 const $links = d.querySelector("#links");
+const $spinerDiv = d.querySelector("#spiner")
 
 
 /*const pintarPokemons = (url)=> {
@@ -36,14 +37,16 @@ const $links = d.querySelector("#links");
 pintarPokemons("https://pokeapi.co/api/v2/pokemon");*/
 
 function updatePokemons(url) {
+    
+    $spinerDiv.innerHTML = `<img src="/assets/three-dots.svg" alt="Cargando..." >`;
+
     if (url) {
-  
-      //Reiniciamos pokemones actuales
       $main.innerHTML = "";
       // Llamamos a la API de pokemon con Fetch
       fetch(url)
         .then(res => res.json())
         .then(res => {
+          
           // Obtenemos y recorremos a los primeros 20 pokemones obtenidos
           for (let i of res.results) {
   
@@ -51,6 +54,8 @@ function updatePokemons(url) {
             fetch(i.url)
               .then(x => x.json())
               .then(x => {
+
+                $spinerDiv.innerHTML = "";
                 // Vamos pintando o ingresando la imagen y nombre del pokemon actual que se esta evaluando 
                 $main.innerHTML += `<div class="card">
                                                     <img src="${x.sprites.front_default}" alt="">
@@ -60,9 +65,9 @@ function updatePokemons(url) {
           };
           // Pintamos los enlaces de siguiente o anterior de la paginacion de los pokemones 
           //Boton hacia atrás
-          $links.innerHTML = (res.previous) ? `<button onclick="updatePokemons('${res.previous}')">Atrás</button>` : "";
+          $links.innerHTML = (res.previous) ? `<button onclick="updatePokemons('${res.previous}')"><span>Atrás</span></button>` : "";
           //Botón hacia adelante
-          $links.innerHTML += (res.next) ? `<button onclick="updatePokemons('${res.next}')">Siguiente</button>` : "";
+          $links.innerHTML += (res.next) ? `<button onclick="updatePokemons('${res.next}')"><span>Siguiente</span></button>` : "";
   
         });
     }
